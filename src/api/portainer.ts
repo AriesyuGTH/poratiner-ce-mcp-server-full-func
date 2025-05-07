@@ -302,4 +302,20 @@ export {
   updateContainerResourceLimits,
   restartDockerService,
   inspectService,
+  authenticateUser, // Add new function to the existing export block
 };
+
+/**
+ * Authenticate a user against Portainer API.
+ * @param payload - Username and password for authentication.
+ * @returns Authentication response with JWT token.
+ */
+async function authenticateUser(
+  payload: { username?: string; password?: string },
+): Promise<{ jwt?: string }> {
+  const response = await portainerClient.post(
+    `/api/auth`, 
+    payload,
+  );
+  return response.data;
+}

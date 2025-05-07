@@ -1,0 +1,1253 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+4. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+<additional_info>
+
+</additional_info>
+
+</file_summary>
+
+<directory_structure>
+.env-sample
+.gitignore
+deno.json
+memory-bank/activeContext.md
+memory-bank/productContext.md
+memory-bank/projectbrief.md
+package.json
+README.md
+src/api/portainer.ts
+src/constants/index.ts
+src/main.ts
+src/types/index.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="memory-bank/activeContext.md">
+# Active Context: Portainer CE MCP Server
+
+## Current Work Focus
+
+The primary focus is to complete the Portainer CE MCP server by implementing all missing API tools as defined in `api-swagger.yaml`. This involves:
+1.  Analyzing `api-swagger.yaml` to identify all API endpoints.
+2.  Comparing the identified endpoints with the already implemented tools in `src/api/portainer.ts`.
+3.  Listing the unimplemented tools.
+4.  Implementing the missing tools, adhering to the existing codebase's style and architecture.
+
+## Recent Changes
+
+-   Initialized the Memory Bank.
+-   Created `projectbrief.md` outlining the project's core requirements and main goal.
+-   Created `productContext.md` detailing the project's purpose, problems solved, operational flow, and user experience goals.
+
+## Next Steps - Memory Bank Creation
+
+1.  Create `systemPatterns.md` after reviewing existing code (`src/api/portainer.ts`, `src/main.ts`).
+2.  Create `techContext.md` after reviewing project files (`package.json`, `deno.json`, `.env`, source code).
+3.  Create `progress.md`.
+
+## Next Steps - Task Execution
+
+1.  Read and analyze `api-swagger.yaml`.
+2.  Read and analyze `src/api/portainer.ts` and other relevant source code to understand existing patterns.
+3.  Identify and list unimplemented API tools.
+4.  Plan the implementation of these tools.
+
+## Active Decisions and Considerations
+
+-   **Development Workflow:**
+    -   Each implemented feature (API tool) must be thoroughly tested.
+    -   The testing environment details are specified in the `.env` file.
+    -   Upon successful testing, changes must be committed to version control.
+-   **Consistency:** New implementations must align with the existing coding style, architectural patterns, and documentation standards.
+-   **Memory Bank Maintenance:** The Memory Bank files, especially `activeContext.md` and `progress.md`, must be updated regularly to reflect the current state of work, decisions, and learnings.
+
+## Important Patterns and Preferences
+
+-   Adherence to MCP specifications for tool definition and interaction.
+-   Code style and architecture should be consistent with the existing `src/api/portainer.ts`.
+
+## Learnings and Project Insights
+
+-   The project involves integrating with an external API (Portainer) via a standardized protocol (MCP).
+-   A clear API specification (`api-swagger.yaml`) is available.
+-   A testing and version control discipline is required.
+</file>
+
+<file path="memory-bank/productContext.md">
+# Product Context: Portainer CE MCP Server
+
+## Why This Project Exists
+
+This project exists to provide an MCP (Model Context Protocol) server, enabling LLM (Large Language Model) agents to interact with the Portainer container management tool.
+
+## Problems It Solves
+
+- **Standardized Tool Usage:** MCP provides a standardized format for LLM agents to use tools, ensuring correct interaction with the target API (Portainer).
+- **Improved Accuracy:** By adhering to the MCP specification, the interaction between the LLM agent and Portainer becomes more reliable and accurate.
+- **Real-time Tool Updates:** MCP facilitates timely updates to tools, ensuring that the LLM agent always uses the most current interface to Portainer.
+
+## How It Should Work
+
+LLM agents will interact with the MCP server via an MCP client. The MCP server will then translate these interactions into API calls to the Portainer instance.
+
+## User Experience Goals
+
+- **Consistency:** The implementation of new API tools should follow the existing code's style and architectural patterns. This ensures a consistent and maintainable codebase.
+- **Developer Experience:** The primary users (developers integrating LLM agents) should find the MCP server easy to understand, use, and extend.
+</file>
+
+<file path="memory-bank/projectbrief.md">
+# Project Brief: Portainer CE MCP Server
+
+## Core Requirement
+
+To develop an MCP (Model Context Protocol) server that enables LLM (Large Language Model) agents to interact with Portainer, a container management tool.
+
+## Main Goal
+
+To supplement the existing MCP server functionalities by implementing the remaining tools as defined in the API documentation (`api-swagger.yaml`). The server should provide comprehensive coverage of the Portainer API, allowing LLM agents to manage various aspects of Portainer.
+</file>
+
+<file path=".env-sample">
+# Portainer API Configuration
+PORTAINER_BASE_URL=http://localhost:9000/
+PORTAINER_API_KEY=your_api_key_here
+PORTAINER_ENV_ID=your_env_id_here
+</file>
+
+<file path="deno.json">
+{
+  "tasks": {
+    "dev": "deno run --watch main.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1"
+  }
+}
+</file>
+
+<file path="package.json">
+{
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "axios": "^1.8.4"
+  }
+}
+</file>
+
+<file path="src/types/index.ts">
+export interface DockerContainer {
+    Id: string;
+    Names: string[];
+    Image: string;
+    ImageID: string;
+    Command: string;
+    Created: number;
+    State: string;
+    Status: string;
+    Ports: Array<{
+        IP?: string;
+        PrivatePort: number;
+        PublicPort?: number;
+        Type: string;
+    }>;
+    Labels: Record<string, string>;
+    NetworkSettings: {
+        Networks: Record<string, unknown>;
+    };
+    Mounts: Array<{
+        Type: string;
+        Name?: string;
+        Source: string;
+        Destination: string;
+        Driver?: string;
+        Mode: string;
+        RW: boolean;
+        Propagation: string;
+    }>;
+}
+
+export interface DockerImage {
+    Id: string;
+    ParentId: string;
+    RepoTags: string[];
+    RepoDigests: string[];
+    Created: number;
+    Size: number;
+    VirtualSize: number;
+    Labels: Record<string, string>;
+}
+
+export interface DockerNetwork {
+    Id: string;
+    Name: string;
+    Scope: string;
+    Driver: string;
+    EnableIPv6: boolean;
+    IPAM: {
+        Driver: string;
+        Options: Record<string, string>;
+        Config: Array<{
+            Subnet: string;
+            Gateway: string;
+        }>;
+    };
+    Internal: boolean;
+    Attachable: boolean;
+    Ingress: boolean;
+    ConfigFrom: {
+        Network: string;
+    };
+    ConfigOnly: boolean;
+    Containers: Record<string, unknown>;
+    Options: Record<string, string>;
+}
+
+export interface DockerService {
+    ID: string;
+    Version: {
+        Index: number;
+    };
+    CreatedAt: string;
+    UpdatedAt: string;
+    Spec: {
+        Name: string;
+        Labels: Record<string, string>;
+        TaskTemplate: {
+            ContainerSpec: {
+                Image: string;
+            };
+        };
+        Mode: {
+            Replicated: {
+                Replicas: number;
+            };
+        };
+    };
+    Endpoint: {
+        Spec: {
+            Mode: string;
+            Ports: Array<{
+                Protocol: string;
+                TargetPort: number;
+                PublishedPort: number;
+                PublishMode: string;
+            }>;
+        };
+    };
+    UpdateStatus: {
+        State: string;
+        StartedAt: string;
+        CompletedAt: string;
+        Message: string;
+    };
+}
+</file>
+
+<file path=".gitignore">
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Build output
+src.exe
+
+# Deno
+.deno/
+deno.lock
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+</file>
+
+<file path="src/constants/index.ts">
+export const Tools = {
+    DockerContainers: "fetch_docker_containers",
+    CreateDockerContainer: "create_docker_container",
+    StartDockerContainer: "start_docker_container",
+    DeleteDockerContainer: "delete_docker_container",
+    ContainerLogs: "fetch_container_logs",
+    UpdateContainer: "update_container_resource_limits",
+    DeleteUnwantedContainers: "delete_stopped_containers",
+    GetImages: "fetch_docker_images",
+    DeleteImageBuilderCache: "delete_image_build_cache",
+    DeleteUnusedImages: "delete_unused_images",
+    GetNetworks: "fetch_docker_networks",
+    GetServices: "fetch_docker_services",
+    ServiceLogs: "fetch_service_logs",
+    InspectService: "inspect_service",
+    UpdateService: "update_docker_service",
+};
+</file>
+
+<file path="README.md">
+# Portainer MCP Server
+
+A Model Context Protocol (MCP) server implementation for Portainer, enabling AI assistants to interact with Docker containers and services through Portainer's API.
+
+## Features
+
+- Docker container management (create, start, delete, fetch logs)
+- Docker image management (fetch, delete unused, clear build cache)
+- Docker network operations (inspect, fetch)
+- Docker service management (fetch, logs)
+- Resource limit management for containers
+
+## Project Structure
+
+```
+portainer-ce-mcp/
+├── src/
+│   ├── api/
+│   │   └── portainer.ts      # Portainer API integration
+│   ├── constants/
+│   │   └── index.ts          # Tool names and other constants
+│   ├── types/
+│   │   └── index.ts          # TypeScript type definitions
+│   └── main.ts               # Main server implementation
+├── package.json              # Project dependencies
+├── package-lock.json         # Dependency lock file
+├── deno.json                 # Deno configuration
+└── README.md                 # Project documentation
+```
+
+## Prerequisites
+
+- Deno
+- Portainer instance with API access
+- Docker installed and running
+
+## Installation
+
+1. Clone the repository:
+```bash
+git https://github.com/BirajMainali/poratiner-ce-mcp-server.git
+cd portainer-ce-mcp
+```
+## Configuration
+
+The server requires the following environment variables:
+- `PORTAINER_URL`: The URL of your Portainer instance
+- `PORTAINER_API_KEY`: Your Portainer API key
+- `PORTAINER_ENV_ID`: Your Poratiner Environment Id
+
+## API Tools
+
+The server provides the following tools for AI assistants:
+
+### Container Management
+- `FETCH_DOCKER_CONTAINERS`: List all containers
+- `CREATE_DOCKER_CONTAINER`: Create a new container
+- `START_DOCKER_CONTAINER`: Start a container
+- `DELETE_DOCKER_CONTAINER`: Remove a container
+- `FETCH_CONTAINER_LOGS`: Get container logs
+- `UPDATE_CONTAINER_RESOURCE_LIMITS`: Update container resources
+- `DELETE_STOPPED_CONTAINERS`: Clean up stopped containers
+
+### Image Management
+- `FETCH_IMAGES`: List all images
+- `DELETE_IMAGE_BUILD_CACHE`: Clear build cache
+- `DELETE_UNUSED_IMAGES`: Remove unused images
+
+### Network Operations
+- `FETCH_NETWORKS`: List all networks
+- `INSPECT_NETWORK`: Get network details
+
+### Service Management
+- `FETCH_SERVICES`: List all services
+- `FETCH_SERVICE_LOG`: Get service logs
+
+## Development
+
+
+### Building
+```bash
+deno compile --allow-env --allow-read --allow-net --env-file=.env  src/main.ts
+```
+
+### Inspect MCP Server
+```bash
+npx @modelcontextprotocol/inspector deno run --allow-env --allow-read --allow-net --env-file=.env  src/main.ts
+```
+
+### MCP Config
+```json
+{
+  "mcpServers": {
+    "poratiner": {
+      "command": "C:\\MCP\\portainer-ce-mcp\\src.exe", // use executable path
+      "args": [
+        "y"
+      ]
+    }
+  }
+}
+```
+
+## License
+
+MIT
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+</file>
+
+<file path="src/api/portainer.ts">
+import axios, { AxiosInstance } from "axios";
+
+import { load } from "https://deno.land/std@0.220.1/dotenv/mod.ts";
+
+load({ export: true });
+
+const PORTAINER_BASE_URL = Deno.env.get("PORTAINER_BASE_URL");
+const PORTAINER_API_KEY = Deno.env.get("PORTAINER_API_KEY");
+const PORTAINER_ENV_ID = Deno.env.get("PORTAINER_ENV_ID");
+
+const portainerClient: AxiosInstance = axios.create({
+  baseURL: PORTAINER_BASE_URL,
+  headers: { "X-API-Key": PORTAINER_API_KEY },
+  timeout: 30000,
+});
+
+/**
+ * Fetch all Docker containers from a specified environment
+ * @param envId - The ID of the environment to fetch containers from
+ * @returns Array of Docker containers
+ */
+async function fetchDockerContainers() {
+  const response = await portainerClient.get(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/containers/json`,
+    {
+      params: {
+        all: true,
+      },
+    },
+  );
+
+  return response.data;
+}
+
+/**
+ * Create a new Docker container in a specified environment
+ * @param containerName - The name of the container to create
+ * @param image - The Docker image to use for the container
+ * @param exposedPorts - Ports to expose from the container
+ * @param hostConfig - Host configuration for the container
+ * @returns Container creation response
+ */
+async function createDockerContainer(
+  containerName: string,
+  image: string,
+  exposedPorts: Record<string, unknown>,
+  hostConfig: Record<string, unknown>,
+) {
+  const response = await portainerClient.post(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/containers/create`,
+    {
+      name: containerName,
+      Image: image,
+      ExposedPorts: exposedPorts,
+      HostConfig: hostConfig,
+    },
+  );
+  return response.data;
+}
+
+/**
+ * Start a Docker container in a specified environment
+ * @param containerId - The ID of the container to start
+ * @returns Empty response on success
+ */
+async function startDockerContainer(
+  containerId: string,
+) {
+  await portainerClient.post(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/containers/${containerId}/start`,
+  );
+}
+
+/**
+ * Delete a Docker container from a specified environment
+ * @param containerId - The ID of the container to delete
+ * @param force - Whether to force the deletion of the container
+ * @returns Empty response on success
+ */
+async function deleteDockerContainer(
+  containerId: string,
+  force: boolean = false,
+) {
+  await portainerClient.delete(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/containers/${containerId}`,
+    {
+      params: {
+        force: force,
+      },
+    },
+  );
+}
+
+/**
+ * Fetch logs from a Docker container
+ * @param containerId - The ID of the container to fetch logs from
+ * @param since - Timestamp to start fetching logs from
+ * @param follow - Whether to follow the logs
+ * @param timestamps - Whether to include timestamps
+ * @param tail - Number of lines to return from the end of the logs
+ * @returns Container logs
+ */
+async function fetchContainerLogs(
+  containerId: string,
+  since: number = 0,
+  timestamps: boolean = false,
+  tail: string = "100",
+) {
+  const response = await portainerClient.get(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/containers/${containerId}/logs`,
+    {
+      params: {
+        since: since,
+        stdout: true,
+        timestamps: timestamps,
+        tail: tail,
+      },
+    },
+  );
+  return response.data;
+}
+
+/**
+ * Update resource limits for a Docker container
+ * @param containerId - The ID of the container to update
+ * @param memory - Memory limit in bytes
+ * @param memorySwap - Memory swap limit in bytes
+ * @param restartPolicy - Restart policy for the container
+ * @returns Empty response on success
+ */
+async function updateContainerResourceLimits(
+  containerId: string,
+  memory: number,
+  memorySwap: number,
+  restartPolicy: Record<string, unknown>,
+) {
+  await portainerClient.post(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/containers/${containerId}/update`,
+    {
+      Memory: memory,
+      MemorySwap: memorySwap,
+      RestartPolicy: restartPolicy,
+    },
+  );
+}
+
+/**
+ * Delete all stopped containers from a specified environment
+ * @param envId - The ID of the environment to clean up
+ * @returns Prune response with deleted container IDs
+ */
+async function pruneContainer() {
+  const response = await portainerClient.delete(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/containers/prune`,
+    {
+      params: {
+        all: true,
+      },
+    },
+  );
+  return response.data;
+}
+
+/**
+ * Fetch all Docker images from a specified environment
+ * @returns Array of Docker images
+ */
+async function fetchImages() {
+  const response = await portainerClient.get(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/images/json`,
+  );
+  return response.data;
+}
+
+/**
+ * Delete the build cache for Docker images
+ * @param envId - The ID of the environment to clean up
+ * @returns Prune response with deleted image IDs
+ */
+async function deleteImageBuildCache() {
+  const response = await portainerClient.delete(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/images/prune`,
+  );
+  return response.data;
+}
+
+/**
+ * Delete unused Docker images
+ * @returns Prune response with deleted image IDs
+ */
+async function deleteUnusedImages() {
+  const response = await portainerClient.delete(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/images/prune`,
+  );
+  return response.data;
+}
+
+/**
+ * Fetch all Docker networks from a specified environment
+ * @returns Array of Docker networks
+ */
+async function fetchNetworks() {
+  const response = await portainerClient.get(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/networks`,
+  );
+  return response.data;
+}
+
+/**
+ * Fetch all Docker services from a specified environment
+ * @returns Array of Docker services
+ */
+async function fetchServices() {
+  const response = await portainerClient.get(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/services`,
+  );
+  return response.data;
+}
+
+/**
+ * Fetch logs from a Docker service
+ * @param serviceId - The ID of the service to fetch logs from
+  * @param since - Timestamp to start fetching logs from
+ * @param timestamps - Whether to include timestamps
+ * @param tail - Number of lines to return from the end of the logs
+ * @returns Service logs
+ */
+async function fetchServiceLog(
+  serviceId: string,
+  since: number = 100,
+  timestamps: boolean = false,
+  tail: string = "100",
+) {
+  const response = await portainerClient.get(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/services/${serviceId}/logs`,
+    {
+      params: {
+        stdout: true,
+        since: since,
+        timestamps: timestamps,
+        tail: tail,
+      },
+    },
+  );
+  return response.data;
+}
+
+
+/**
+ * Inspect a Docker service
+ * @param serviceId - The ID of the service to inspect
+ * @returns Service inspection response
+ */
+async function inspectService(serviceId: string) {
+  const response = await portainerClient.get(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/services/${serviceId}`,
+  );
+  return response.data;
+}
+
+
+/**
+ * Update a Docker service
+ * @param serviceId - The ID of the service to update
+ * @returns Service update response
+ */
+
+async function restartDockerService(serviceId: string) {
+  const service = await inspectService(serviceId);
+  const version = service.Version.Index;
+  const spec = service.Spec;
+
+  const response = await portainerClient.post(
+    `/api/endpoints/${PORTAINER_ENV_ID}/docker/services/${serviceId}/update`,
+    spec,
+    {
+      params: {
+        version: version,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  return response.data;
+}
+
+
+export {
+  createDockerContainer,
+  deleteDockerContainer,
+  deleteImageBuildCache,
+  deleteUnusedImages,
+  fetchContainerLogs,
+  fetchDockerContainers,
+  fetchImages,
+  fetchNetworks,
+  fetchServiceLog,
+  fetchServices,
+  pruneContainer,
+  startDockerContainer,
+  updateContainerResourceLimits,
+  restartDockerService,
+  inspectService,
+};
+</file>
+
+<file path="src/main.ts">
+#!/usr/bin/env node
+
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
+import { Tools } from "./constants/index.ts";
+
+import {
+  createDockerContainer,
+  deleteDockerContainer,
+  deleteImageBuildCache,
+  deleteUnusedImages,
+  fetchContainerLogs,
+  fetchDockerContainers,
+  fetchImages,
+  fetchNetworks,
+  fetchServiceLog,
+  fetchServices,
+  pruneContainer,
+  startDockerContainer,
+  updateContainerResourceLimits,
+  restartDockerService,
+  inspectService,
+
+} from "./api/portainer.ts";
+
+const server = new Server(
+  {
+    name: "poratiner/ce-v.1.0",
+    version: "0.1.0",
+  },
+  {
+    capabilities: {
+      resources: {},
+      tools: {},
+    },
+  },
+);
+
+server.setRequestHandler(ListToolsRequestSchema, () => {
+  return {
+    tools: [
+      {
+        name: Tools.DockerContainers,
+        description: "Fetch all Docker containers",
+        inputSchema: {
+          type: "object",
+          properties: {},
+          required: [],
+        },
+      },
+      {
+        name: Tools.CreateDockerContainer,
+        description: "Create a new Docker container",
+        inputSchema: {
+          type: "object",
+          properties: {
+            containerName: {
+              type: "string",
+              description: "The name of the container to create",
+            },
+            image: {
+              type: "string",
+              description: "The Docker image to use for the container",
+            },
+            exposedPorts: {
+              type: "object",
+              description: "Ports to expose from the container",
+            },
+            hostConfig: {
+              type: "object",
+              description: "Host configuration for the container",
+            },
+          },
+          required: ["containerName", "image"],
+        },
+      },
+      {
+        name: Tools.StartDockerContainer,
+        description: "Start a Docker container",
+        inputSchema: {
+          type: "object",
+          properties: {
+            containerId: {
+              type: "string",
+              description: "The ID of the container to start",
+            },
+          },
+          required: ["containerId"],
+        },
+      },
+      {
+        name: Tools.DeleteDockerContainer,
+        description: "Delete a Docker container",
+        inputSchema: {
+          type: "object",
+          properties: {
+            containerId: {
+              type: "string",
+              description: "The ID of the container to delete",
+            },
+            force: {
+              type: "boolean",
+              description: "Whether to force the deletion of the container",
+            },
+          },
+          required: ["containerId"],
+        },
+      },
+      {
+        name: Tools.ContainerLogs,
+        description: "Fetch logs from a Docker container",
+        inputSchema: {
+          type: "object",
+          properties: {
+            containerId: {
+              type: "string",
+              description: "The ID of the container to fetch logs from",
+            },
+            since: {
+              type: "number",
+              description: "Timestamp to start fetching logs from",
+            },
+            timestamps: {
+              type: "boolean",
+              description: "Whether to include timestamps",
+            },
+            tail: {
+              type: "string",
+              description: "Number of lines to return from the end of the logs",
+            },
+          },
+          required: ["containerId"],
+        },
+      },
+      {
+        name: Tools.UpdateContainer,
+        description: "Update resource limits for a Docker container",
+        inputSchema: {
+          type: "object",
+          properties: {
+            containerId: {
+              type: "string",
+              description: "The ID of the container to update",
+            },
+            memory: {
+              type: "number",
+              description: "Memory limit in bytes",
+            },
+            memorySwap: {
+              type: "number",
+              description: "Memory swap limit in bytes",
+            },
+            restartPolicy: {
+              type: "object",
+              description: "Restart policy for the container",
+            },
+          },
+          required: ["containerId"],
+        },
+      },
+      {
+        name: Tools.DeleteUnwantedContainers,
+        description: "Delete all stopped containers",
+        inputSchema: {
+          type: "object",
+          properties: {},
+          required: [],
+        },
+      },
+      {
+        name: Tools.GetImages,
+        description: "Fetch all Docker images",
+        inputSchema: {
+          type: "object",
+          properties: {},
+          required: [],
+        },
+      },
+      {
+        name: Tools.DeleteImageBuilderCache,
+        description: "Delete the build cache for Docker images",
+        inputSchema: {
+          type: "object",
+          properties: {},
+          required: [],
+        },
+      },
+      {
+        name: Tools.DeleteUnusedImages,
+        description: "Delete unused Docker images",
+        inputSchema: {
+          type: "object",
+          properties: {},
+          required: [],
+        },
+      },
+      {
+        name: Tools.GetNetworks,
+        description: "Fetch all Docker networks",
+        inputSchema: {
+          type: "object",
+          properties: {},
+          required: [],
+        },
+      },
+      {
+        name: Tools.GetServices,
+        description: "Fetch all Docker services",
+        inputSchema: {
+          type: "object",
+          properties: {},
+          required: [],
+        },
+      },
+      {
+        name: Tools.ServiceLogs,
+        description: "Fetch logs from a Docker service",
+        inputSchema: {
+          type: "object",
+          properties: {
+            serviceId: {
+              type: "string",
+              description: "The ID of the service to fetch logs from",
+            },
+            since: {
+              type: "number",
+              description: "Timestamp to start fetching logs from",
+            },
+            timestamps: {
+              type: "boolean",
+              description: "Whether to include timestamps",
+            },
+            tail: {
+              type: "number",
+              description: "Number of lines to return from the end of the logs",
+            },
+          },
+          required: ["serviceId"],
+        },
+      },
+      {
+        name: Tools.InspectService,
+        description: "Inspect a Docker service",
+        inputSchema: {
+          type: "object",
+          properties: {
+            serviceId: {
+              type: "string",
+              description: "The ID of the service to inspect",
+            }
+          },
+          required: ["serviceId"],
+        },
+      },
+      {
+        name: Tools.UpdateService,
+        description: "Update a Docker service",
+        inputSchema: {
+          type: "object",
+          properties: {
+            serviceId: {
+              type: "string",
+              description: "The ID of the service to update",
+            }
+          },
+          required: ["serviceId"]
+        },
+      }
+    ],
+  };
+});
+
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  try {
+    const { name, arguments: args } = request.params;
+
+    if (!args) {
+      throw new Error(`No arguments provided for tool: ${name}`);
+    }
+
+    // Type assertion for args to ensure proper typing
+    const typedArgs = args as Record<string, any>;
+
+    switch (name) {
+      case Tools.DockerContainers: {
+        const result = await fetchDockerContainers();
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.CreateDockerContainer: {
+        const result = await createDockerContainer(
+          typedArgs.containerName as string,
+          typedArgs.image as string,
+          typedArgs.exposedPorts as Record<string, unknown> || {},
+          typedArgs.hostConfig as Record<string, unknown> || {},
+        );
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.StartDockerContainer: {
+        const result = await startDockerContainer(
+          typedArgs.containerId as string,
+        );
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.DeleteDockerContainer: {
+        const result = await deleteDockerContainer(
+          typedArgs.containerId as string,
+          typedArgs.force as boolean,
+        );
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.ContainerLogs: {
+        const result = await fetchContainerLogs(
+          typedArgs.containerId as string,
+          typedArgs.since as number,
+          typedArgs.timestamps as boolean,
+          typedArgs.tail as string,
+        );
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.UpdateContainer: {
+        const result = await updateContainerResourceLimits(
+          typedArgs.containerId as string,
+          typedArgs.memory as number,
+          typedArgs.memorySwap as number,
+          typedArgs.restartPolicy as Record<string, unknown>,
+        );
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.DeleteUnwantedContainers: {
+        const response = await pruneContainer();
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(response, null, 2),
+          }],
+        };
+      }
+
+      case Tools.GetImages: {
+        const images = await fetchImages();
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(images, null, 2),
+          }],
+        };
+      }
+
+      case Tools.DeleteImageBuilderCache: {
+        const result = await deleteImageBuildCache();
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.DeleteUnusedImages: {
+        const result = await deleteUnusedImages();
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.GetNetworks: {
+        const networks = await fetchNetworks();
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(networks, null, 2),
+          }],
+        };
+      }
+
+      case Tools.GetServices: {
+        const services = await fetchServices();
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(services, null, 2),
+          }],
+        };
+      }
+
+      case Tools.ServiceLogs: {
+        const result = await fetchServiceLog(
+          typedArgs.serviceId as string,
+          typedArgs.since as number,
+          typedArgs.timestamps as boolean,
+          typedArgs.tail as string,
+        );
+
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.InspectService: {
+        const result = await inspectService(
+          typedArgs.serviceId as string,
+        );
+
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.UpdateService: {
+        const result = await restartDockerService(
+          typedArgs.serviceId as string
+        );
+
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+
+
+      default: {
+        throw new Error(`Unknown tool: ${name}`);
+      }
+    }
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || error.message || "Cannot process the request";
+    return {
+      content: [{
+        type: "text",
+        text: `Failed: ${errorMessage}`,
+      }],
+    };
+  }
+});
+
+// Start receiving messages on stdin and sending messages on stdout
+const transport = new StdioServerTransport();
+await server.connect(transport);
+</file>
+
+</files>

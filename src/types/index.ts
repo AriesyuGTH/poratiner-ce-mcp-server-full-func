@@ -103,4 +103,21 @@ export interface DockerService {
         CompletedAt: string;
         Message: string;
     };
-} 
+}
+
+/**
+ * Payload for user authentication.
+ * Based on `auth.authenticatePayload` from Swagger.
+ */
+export interface AuthenticatePayload {
+    username?: string;
+    password?: string;
+}
+
+/**
+ * Response for user authentication.
+ * Based on `auth.authenticateResponse` from Swagger.
+ */
+export interface AuthenticateResponse {
+    jwt?: string;
+}

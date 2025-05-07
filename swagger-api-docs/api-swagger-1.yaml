@@ -1,0 +1,305 @@
+basePath: /api
+definitions:
+  auth.authenticatePayload:
+    properties:
+      password:
+        description: Password
+        example: mypassword
+        type: string
+      username:
+        description: Username
+        example: admin
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  auth.authenticateResponse:
+    properties:
+      jwt:
+        description: JWT token used to authenticate against the API
+        example: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB
+        type: string
+    type: object
+  auth.oauthPayload:
+    properties:
+      code:
+        description: OAuth code returned from OAuth Provided
+        type: string
+    type: object
+  backup.backupPayload:
+    properties:
+      password:
+        type: string
+    type: object
+  backup.restorePayload:
+    properties:
+      fileContent:
+        items:
+          type: integer
+        type: array
+      fileName:
+        type: string
+      password:
+        type: string
+    type: object
+
+info:
+  contact:
+    email: info@portainer.io
+  description: |
+    Portainer API is an HTTP API served by Portainer. It is used by the Portainer UI and everything you can do with the UI can be done using the HTTP API.
+    Examples are available at https://documentation.portainer.io/api/api-examples/
+    You can find out more about Portainer at [http://portainer.io](http://portainer.io) and get some support on [Slack](http://portainer.io/slack/).
+
+    # Authentication
+
+    Most of the API environments(endpoints) require to be authenticated as well as some level of authorization to be used.
+    Portainer API uses JSON Web Token to manage authentication and thus requires you to provide a token in the **Authorization** header of each request
+    with the **Bearer** authentication mechanism.
+
+    Example:
+
+    ```
+    Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOjEsImV4cCI6MTQ5OTM3NjE1NH0.NJ6vE8FY1WG6jsRQzfMqeatJ4vh2TWAeeYfDhP71YEE
+    ```
+
+    # Security
+
+    Each API environment(endpoint) has an associated access policy, it is documented in the description of each environment(endpoint).
+
+    Different access policies are available:
+
+    - Public access
+    - Authenticated access
+    - Restricted access
+    - Administrator access
+
+    ### Public access
+
+    No authentication is required to access the environments(endpoints) with this access policy.
+
+    ### Authenticated access
+
+    Authentication is required to access the environments(endpoints) with this access policy.
+
+    ### Restricted access
+
+    Authentication is required to access the environments(endpoints) with this access policy.
+    Extra-checks might be added to ensure access to the resource is granted. Returned data might also be filtered.
+
+    ### Administrator access
+
+    Authentication as well as an administrator role are required to access the environments(endpoints) with this access policy.
+
+    # Execute Docker requests
+
+    Portainer **DO NOT** expose specific environments(endpoints) to manage your Docker resources (create a container, remove a volume, etc...).
+
+    Instead, it acts as a reverse-proxy to the Docker HTTP API. This means that you can execute Docker requests **via** the Portainer HTTP API.
+
+    To do so, you can use the `/endpoints/{id}/docker` Portainer API environment(endpoint) (which is not documented below due to Swagger limitations). This environment(endpoint) has a restricted access policy so you still need to be authenticated to be able to query this environment(endpoint). Any query on this environment(endpoint) will be proxied to the Docker API of the associated environment(endpoint) (requests and responses objects are the same as documented in the Docker API).
+
+    # Private Registry
+
+    Using private registry, you will need to pass a based64 encoded JSON string ‘{"registryId":\<registryID value\>}’ inside the Request Header. The parameter name is "X-Registry-Auth".
+    \<registryID value\> - The registry ID where the repository was created.
+
+    Example:
+
+    ```
+    eyJyZWdpc3RyeUlkIjoxfQ==
+    ```
+
+    **NOTE**: You can find more information on how to query the Docker API in the [Docker official documentation](https://docs.docker.com/engine/api/v1.30/) as well as in [this Portainer example](https://documentation.portainer.io/api/api-examples/).
+  license:
+    name: zlib
+    url: https://github.com/portainer/portainer/blob/develop/LICENSE
+  title: PortainerCE API
+  version: 2.27.5
+paths:
+  /auth:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        **Access policy**: public
+        Use this environment(endpoint) to authenticate against Portainer using a username and password.
+      operationId: AuthenticateUser
+      parameters:
+      - description: Credentials used for authentication
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.authenticatePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/auth.authenticateResponse'
+        "400":
+          description: Invalid request
+        "422":
+          description: Invalid Credentials
+        "500":
+          description: Server error
+      summary: Authenticate
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      description: '**Access policy**: public'
+      operationId: Logout
+      responses:
+        "204":
+          description: Success
+        "500":
+          description: Server error
+      security:
+      - ApiKeyAuth: []
+      - jwt: []
+      summary: Logout
+      tags:
+      - auth
+  /auth/oauth/validate:
+    post:
+      consumes:
+      - application/json
+      description: '**Access policy**: public'
+      operationId: ValidateOAuth
+      parameters:
+      - description: OAuth Credentials used for authentication
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.oauthPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/auth.authenticateResponse'
+        "400":
+          description: Invalid request
+        "422":
+          description: Invalid Credentials
+        "500":
+          description: Server error
+      summary: Authenticate with OAuth
+      tags:
+      - auth
+  /backup:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Creates an archive with a system data snapshot that could be used to restore the system.
+        **Access policy**: admin
+      operationId: Backup
+      parameters:
+      - description: An object contains the password to encrypt the backup with
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/backup.backupPayload'
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Invalid request
+        "500":
+          description: Server error
+      security:
+      - ApiKeyAuth: []
+      - jwt: []
+      summary: Creates an archive with a system data snapshot that could be used to
+        restore the system.
+      tags:
+      - backup
+schemes:
+- http
+- https
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: X-API-KEY
+    type: apiKey
+  jwt:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
+tags:
+- description: Authenticate against Portainer HTTP API
+  name: auth
+- description: Manage backups
+  name: backup
+- description: Manage Custom Templates
+  name: custom_templates
+- description: Manage Docker resources
+  name: docker
+- description: Manage Edge related environment(endpoint) settings
+  name: edge
+- description: Manage Edge Groups
+  name: edge_groups
+- description: Manage Edge Jobs
+  name: edge_jobs
+- description: Manage Edge Stacks
+  name: edge_stacks
+- description: Manage Edge Templates
+  name: edge_templates
+- description: Manage environment(endpoint) groups
+  name: endpoint_groups
+- description: Manage Docker environments(endpoints)
+  name: endpoints
+- description: Operate git repository
+  name: gitops
+- description: Manage Helm charts
+  name: helm
+- description: Manage Intel AMT settings
+  name: intel
+- description: Manage Kubernetes cluster
+  name: kubernetes
+- description: Manage LDAP settings
+  name: ldap
+- description: Fetch the message of the day
+  name: motd
+- description: Manage Docker registries
+  name: registries
+- description: Manage access control on Docker resources
+  name: resource_controls
+- description: Manage roles
+  name: roles
+- description: Manage Portainer settings
+  name: settings
+- description: Manage ssl settings
+  name: ssl
+- description: Manage stacks
+  name: stacks
+- description: Information about the Portainer instance
+  name: status
+- description: Manage Portainer system
+  name: system
+- description: Manage tags
+  name: tags
+- description: Manage team memberships
+  name: team_memberships
+- description: Manage teams
+  name: teams
+- description: Manage App Templates
+  name: templates
+- description: Upload files
+  name: upload
+- description: Manage users
+  name: users
+- description: Manage webhooks
+  name: webhooks
+- description: Create exec sessions using websockets
+  name: websocket

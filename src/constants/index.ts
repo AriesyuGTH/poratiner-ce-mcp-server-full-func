@@ -14,4 +14,5 @@ export const Tools = {
     ServiceLogs: "fetch_service_logs",
     InspectService: "inspect_service",
     UpdateService: "update_docker_service",
+    AuthenticateUser: "authenticate_user",
 };

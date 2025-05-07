@@ -24,8 +24,9 @@ import {
   updateContainerResourceLimits,
   restartDockerService,
   inspectService,
-
+  authenticateUser, // Add authenticateUser here
 } from "./api/portainer.ts";
+import { AuthenticatePayload, AuthenticateResponse } from "./types/index.ts"; // Add type imports
 
 const server = new Server(
   {
@@ -269,7 +270,25 @@ server.setRequestHandler(ListToolsRequestSchema, () => {
           },
           required: ["serviceId"]
         },
-      }
+      },
+      {
+        name: Tools.AuthenticateUser,
+        description: "Authenticate a user and retrieve a JWT token",
+        inputSchema: {
+          type: "object",
+          properties: {
+            username: {
+              type: "string",
+              description: "Username for authentication",
+            },
+            password: {
+              type: "string",
+              description: "Password for authentication",
+            },
+          },
+          required: ["username", "password"],
+        },
+      },
     ],
   };
 });
@@ -468,7 +487,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         };
       }
 
-
+      case Tools.AuthenticateUser: {
+        const result = await authenticateUser(
+          typedArgs as AuthenticatePayload,
+        );
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
 
       default: {
         throw new Error(`Unknown tool: ${name}`);
