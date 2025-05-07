@@ -50,29 +50,45 @@ The server requires the following environment variables:
 
 ## API Tools
 
-The server provides the following tools for AI assistants:
+The server provides the following tools for AI assistants (tool names correspond to the `name` property used in MCP `CallToolRequest` and defined in `src/constants/index.ts`):
 
 ### Container Management
-- `FETCH_DOCKER_CONTAINERS`: List all containers
-- `CREATE_DOCKER_CONTAINER`: Create a new container
-- `START_DOCKER_CONTAINER`: Start a container
-- `DELETE_DOCKER_CONTAINER`: Remove a container
-- `FETCH_CONTAINER_LOGS`: Get container logs
-- `UPDATE_CONTAINER_RESOURCE_LIMITS`: Update container resources
-- `DELETE_STOPPED_CONTAINERS`: Clean up stopped containers
+- `fetch_docker_containers`: Fetch all Docker containers.
+  - Input: `{}`
+- `create_docker_container`: Create a new Docker container.
+  - Input: `{ "containerName": "string", "image": "string", "exposedPorts": "object (optional)", "hostConfig": "object (optional)" }`
+- `start_docker_container`: Start a Docker container.
+  - Input: `{ "containerId": "string" }`
+- `delete_docker_container`: Delete a Docker container.
+  - Input: `{ "containerId": "string", "force": "boolean (optional)" }`
+- `fetch_container_logs`: Fetch logs from a Docker container.
+  - Input: `{ "containerId": "string", "since": "number (optional)", "timestamps": "boolean (optional)", "tail": "string (optional, e.g., '100')" }`
+- `update_container_resource_limits`: Update resource limits for a Docker container.
+  - Input: `{ "containerId": "string", "memory": "number (optional)", "memorySwap": "number (optional)", "restartPolicy": "object (optional)" }`
+- `delete_stopped_containers`: Delete all stopped containers.
+  - Input: `{}`
 
 ### Image Management
-- `FETCH_IMAGES`: List all images
-- `DELETE_IMAGE_BUILD_CACHE`: Clear build cache
-- `DELETE_UNUSED_IMAGES`: Remove unused images
+- `fetch_docker_images`: Fetch all Docker images.
+  - Input: `{}`
+- `delete_image_build_cache`: Delete the build cache for Docker images.
+  - Input: `{}`
+- `delete_unused_images`: Delete unused Docker images.
+  - Input: `{}`
 
 ### Network Operations
-- `FETCH_NETWORKS`: List all networks
-- `INSPECT_NETWORK`: Get network details
+- `fetch_docker_networks`: Fetch all Docker networks.
+  - Input: `{}`
 
 ### Service Management
-- `FETCH_SERVICES`: List all services
-- `FETCH_SERVICE_LOG`: Get service logs
+- `fetch_docker_services`: Fetch all Docker services.
+  - Input: `{}`
+- `fetch_service_logs`: Fetch logs from a Docker service.
+  - Input: `{ "serviceId": "string", "since": "number (optional)", "timestamps": "boolean (optional)", "tail": "string (optional, e.g., '100')" }`
+- `inspect_service`: Inspect a Docker service.
+  - Input: `{ "serviceId": "string" }`
+- `update_docker_service`: Update/Restart a Docker service.
+  - Input: `{ "serviceId": "string" }`
 
 ### Authentication
 - `authenticate_user`: Authenticate a user and retrieve a JWT token.
@@ -81,6 +97,8 @@ The server provides the following tools for AI assistants:
 ### User Management
 - `list_users`: Fetch all users.
   - Input: `{}`
+- `create_user`: Create a new user. (Note: Implementation is currently paused due to auth method constraints on the target Portainer instance. Input schema reflects intended design.)
+  - Input: `{ "username": "string", "password": "string", "role": "integer (1 for admin, 2 for regular)" }`
 
 ### Stack Management
 - `list_stacks`: Fetch all stacks.
