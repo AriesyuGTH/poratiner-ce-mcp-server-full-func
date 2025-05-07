@@ -25,9 +25,11 @@ import {
   restartDockerService,
   inspectService,
   authenticateUser,
-  listUsers, // Import the new listUsers function
+  listUsers,
+  createUser,
+  listStacks, // Import the new listStacks function
 } from "./api/portainer.ts";
-import { AuthenticatePayload, AuthenticateResponse, User } from "./types/index.ts"; // Add User type import
+import { AuthenticatePayload, AuthenticateResponse, User, UserCreatePayload, Stack } from "./types/index.ts"; // Add Stack type import
 
 const server = new Server(
   {
@@ -299,6 +301,38 @@ server.setRequestHandler(ListToolsRequestSchema, () => {
           required: [],
         },
       },
+      {
+        name: Tools.CreateUser,
+        description: "Create a new user",
+        inputSchema: {
+          type: "object",
+          properties: {
+            username: {
+              type: "string",
+              description: "Username for the new user",
+            },
+            password: {
+              type: "string",
+              description: "Password for the new user",
+            },
+            role: {
+              type: "integer",
+              description: "Role for the new user (1 for admin, 2 for regular)",
+              enum: [1, 2],
+            },
+          },
+          required: ["username", "password", "role"],
+        },
+      },
+      {
+        name: Tools.ListStacks,
+        description: "Fetch all stacks",
+        inputSchema: { // GET /api/stacks can take 'filters' but we'll make it no-args for now
+          type: "object",
+          properties: {},
+          required: [],
+        },
+      },
     ],
   };
 });
@@ -511,6 +545,28 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case Tools.ListUsers: {
         const result = await listUsers();
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.CreateUser: {
+        const result = await createUser(
+          typedArgs as UserCreatePayload,
+        );
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.ListStacks: {
+        const result = await listStacks();
         return {
           content: [{
             type: "text",

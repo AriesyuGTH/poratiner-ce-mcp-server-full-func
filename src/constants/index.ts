@@ -16,4 +16,6 @@ export const Tools = {
     UpdateService: "update_docker_service",
     AuthenticateUser: "authenticate_user",
     ListUsers: "list_users",
+    CreateUser: "create_user", // This was added but is currently paused
+    ListStacks: "list_stacks",
 };

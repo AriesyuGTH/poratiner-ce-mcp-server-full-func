@@ -163,3 +163,128 @@ export interface User {
     endpointAuthorizations?: EndpointAuthorizations; // Deprecated
     portainerAuthorizations?: Authorizations; // Deprecated
 }
+
+/**
+ * Payload for creating a new user.
+ * Based on `users.userCreatePayload` from Swagger.
+ */
+export interface UserCreatePayload {
+    username: string;
+    password: string;
+    role: number; // 1 for administrator, 2 for regular user
+}
+
+/**
+ * Represents a key-value pair.
+ * Based on `portainer.Pair` from Swagger.
+ */
+export interface Pair {
+    name?: string;
+    value?: string;
+}
+
+/**
+ * Settings for GitOps auto-update.
+ * Based on `portainer.AutoUpdateSettings` from Swagger.
+ */
+export interface AutoUpdateSettings {
+    forcePullImage?: boolean;
+    forceUpdate?: boolean;
+    interval?: string;
+    jobID?: string;
+    webhook?: string;
+}
+
+/**
+ * Options for a stack.
+ * Based on `portainer.StackOption` from Swagger.
+ */
+export interface StackOption {
+    prune?: boolean;
+}
+
+/**
+ * Git authentication details.
+ * Based on `gittypes.GitAuthentication` from Swagger.
+ */
+export interface GitAuthentication {
+    gitCredentialID?: number;
+    password?: string;
+    username?: string;
+}
+
+/**
+ * Git repository configuration.
+ * Based on `gittypes.RepoConfig` from Swagger.
+ */
+export interface GitRepoConfig {
+    authentication?: GitAuthentication;
+    configFilePath?: string;
+    configHash?: string;
+    referenceName?: string;
+    tlsskipVerify?: boolean;
+    url?: string;
+}
+
+/**
+ * Access details for a team on a resource.
+ * Based on `portainer.TeamResourceAccess` from Swagger.
+ */
+export interface TeamResourceAccess {
+    AccessLevel?: number;
+    TeamId?: number;
+}
+
+/**
+ * Access details for a user on a resource.
+ * Based on `portainer.UserResourceAccess` from Swagger.
+ */
+export interface UserResourceAccess {
+    AccessLevel?: number;
+    UserId?: number;
+}
+
+/**
+ * Resource control definition.
+ * Based on `portainer.ResourceControl` from Swagger.
+ */
+export interface ResourceControl {
+    AccessLevel?: number;
+    AdministratorsOnly?: boolean;
+    Id?: number;
+    OwnerId?: number; // Deprecated
+    Public?: boolean;
+    ResourceId?: string;
+    SubResourceIds?: string[];
+    System?: boolean;
+    TeamAccesses?: TeamResourceAccess[];
+    UserAccesses?: UserResourceAccess[];
+    Type?: number;
+}
+
+/**
+ * Represents a Portainer stack.
+ * Based on `portainer.Stack` from Swagger.
+ */
+export interface Stack {
+    Id?: number;
+    Name?: string;
+    Type?: number; // 1 for Swarm, 2 for Compose
+    EndpointId?: number;
+    SwarmId?: string;
+    EntryPoint?: string;
+    Env?: Pair[];
+    Status?: number; // 1 for active, 2 for inactive
+    ProjectPath?: string;
+    Option?: StackOption;
+    ResourceControl?: ResourceControl;
+    AdditionalFiles?: string[];
+    AutoUpdate?: AutoUpdateSettings;
+    fromAppTemplate?: boolean;
+    gitConfig?: GitRepoConfig;
+    namespace?: string;
+    createdBy?: string;
+    creationDate?: number;
+    updatedBy?: string;
+    updateDate?: number;
+}

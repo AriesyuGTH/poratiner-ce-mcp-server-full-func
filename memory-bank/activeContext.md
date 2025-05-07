@@ -36,26 +36,35 @@ The `authenticateUser` tool (for `POST /auth`) has been successfully implemented
     -   Recompiled the project to include the new tool in `src.exe`.
     -   Tested `list_users` successfully using the compiled `portainer-ce-develop` server.
 
+## Recent Changes (Continued)
+-   Attempted to test `create_user` tool, but failed due to Portainer's current authentication method (OAuth/LDAP) not allowing user creation with a password via API.
+-   **Decision**: User creation functionality is temporarily paused. Code changes made for `create_user` (constants, types, initial function and MCP registration) remain in the codebase but are untested and incomplete.
+
+## Recent Changes (Continued)
+-   Successfully implemented and tested the `list_stacks` MCP tool.
+    -   Added `Tools.ListStacks` constant.
+    -   Defined `Stack` and related types (`Pair`, `AutoUpdateSettings`, `StackOption`, `GitAuthentication`, `GitRepoConfig`, `TeamResourceAccess`, `UserResourceAccess`, `ResourceControl`).
+    -   Implemented `listStacks` function in `src/api/portainer.ts`.
+    -   Registered and handled the tool in `src/main.ts`.
+    -   Recompiled the project to include the new tool in `src.exe`.
+    -   Tested `list_stacks` successfully using the compiled `portainer-ce-develop` server.
+
 ## Next Steps - Task Execution
 
-Continuing with **Users (User Management)**. The next tool to implement will be **Create User** (corresponds to `POST /api/users`).
+Continuing with **Stacks (Stack Management)**. The next logical tool to implement would be to inspect a single stack, e.g., `inspect_stack` (corresponds to `GET /api/stacks/{id}`).
 
-The implementation steps for `create_user` will be:
+The implementation steps for `inspect_stack` will be:
 1.  **Update Memory Bank**: Reflect current focus.
-2.  **Define Tool Constant**: Add `CreateUser` to `Tools`.
-3.  **Add Type Definitions**: Define `UserCreatePayload` (based on `users.userCreatePayload` from Swagger) and ensure `User` (response type) is sufficient.
-4.  **Implement API Function**: Create `createUser(payload: UserCreatePayload)` in `src/api/portainer.ts`.
-5.  **Register Tool**: Add tool definition for `create_user` in `src/main.ts`.
-6.  **Handle Tool Call**: Add a case for `Tools.CreateUser` in `src/main.ts`.
-7.  **Testing**: Test the `create_user` tool.
+2.  **Define Tool Constant**: Add `InspectStack` to `Tools`.
+3.  **Add Type Definitions**: The response type is `portainer.Stack`, which we already have as `Stack`. No new request payload type is needed if we pass ID as a simple argument.
+4.  **Implement API Function**: Create `inspectStack(id: number)` in `src/api/portainer.ts`.
+5.  **Register Tool**: Add tool definition for `inspect_stack` in `src/main.ts` (input will be stack ID).
+6.  **Handle Tool Call**: Add a case for `Tools.InspectStack` in `src/main.ts`.
+7.  **Testing**: Test the `inspect_stack` tool.
 8.  **Compilation**: Compile the server.
-9.  **Git Commit & Push**: Commit changes.
+9.  **Git Commit & Push**: Commit and push changes.
 
-Following `create_user`, other User Management tools will be implemented:
-- Inspect user (`GET /users/{id}`)
-- Update user (`PUT /users/{id}`)
-- Delete user (`DELETE /users/{id}`)
-- Manage user passwords and API keys.
+Following `inspect_stack`, other Stack Management tools will be implemented.
 
 ## Active Decisions and Considerations
 

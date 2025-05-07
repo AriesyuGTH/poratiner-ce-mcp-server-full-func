@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { User } from "../types/index.ts"; // Import User type
+import { User, UserCreatePayload, Stack } from "../types/index.ts"; // Import User, UserCreatePayload, and Stack types
 
 import { load } from "https://deno.land/std@0.220.1/dotenv/mod.ts";
 
@@ -303,8 +303,10 @@ export {
   updateContainerResourceLimits,
   restartDockerService,
   inspectService,
-  authenticateUser, // Add new function to the existing export block
-  listUsers, // Add new function to exports
+  authenticateUser,
+  listUsers,
+  createUser,
+  listStacks, // Add new function to exports
 };
 
 /**
@@ -329,4 +331,25 @@ async function authenticateUser(
 async function listUsers(): Promise<User[]> {
   const response = await portainerClient.get(`/api/users`);
   return response.data as User[];
+}
+
+/**
+ * Create a new user in Portainer.
+ * @param payload - User creation data (username, password, role).
+ * @returns The created User object.
+ */
+async function createUser(payload: UserCreatePayload): Promise<User> {
+  const response = await portainerClient.post(`/api/users`, payload);
+  return response.data as User;
+}
+
+/**
+ * Fetch all stacks from Portainer API.
+ * @returns Array of Stack objects.
+ */
+async function listStacks(): Promise<Stack[]> {
+  // The GET /api/stacks endpoint can accept a 'filters' query parameter (JSON encoded)
+  // For this initial implementation, we will not pass any filters.
+  const response = await portainerClient.get(`/api/stacks`);
+  return response.data as Stack[];
 }

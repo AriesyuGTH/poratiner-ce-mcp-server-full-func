@@ -46,48 +46,37 @@
     -   Successfully recompiled the project to include the `list_users` tool in `src.exe`.
     -   Successfully tested using `portainer-ce-develop` server configuration (pointing to the new `src.exe`). Returned a list of users.
 
+## Current Status & What Works (Continued)
+
+-   **`list_stacks` Tool (Stacks `GET /api/stacks`)**:
+    -   Successfully implemented (constants, types, API function, main.ts registration and handling).
+    -   Successfully recompiled the project to include the `list_stacks` tool in `src.exe`.
+    -   Successfully tested using `portainer-ce-develop` server configuration. Returned a list of stacks.
+
 ## What's Left to Build / Next Steps
 
-Continuing with the **Users (User Management)** area.
-The next tool to implement is `create_user` (corresponds to `POST /api/users`).
+**User Management** functionality (specifically `create_user`) is currently paused.
 
-**Implementation Plan for `create_user`:**
-1.  **Define Tool Constant**: Add `CreateUser` to `Tools` in `src/constants/index.ts`.
-2.  **Add Type Definitions**: Define `UserCreatePayload` (based on `users.userCreatePayload` from Swagger) in `src/types/index.ts`. The response type is `portainer.User`, which we already have as `User`.
-3.  **Implement API Function**: Create `createUser(payload: UserCreatePayload): Promise<User>` in `src/api/portainer.ts`.
-4.  **Register Tool**: Add tool definition for `create_user` in `src/main.ts`.
-5.  **Handle Tool Call**: Add a case for `Tools.CreateUser` in `src/main.ts`.
-6.  **Testing**: Test the `create_user` tool.
+Continuing with **Stacks (Stack Management)**.
+The next tool to implement is `inspect_stack` (corresponds to `GET /api/stacks/{id}`).
+
+**Implementation Plan for `inspect_stack`:**
+1.  **Define Tool Constant**: Add `InspectStack` to `Tools` in `src/constants/index.ts`.
+2.  **Add Type Definitions**: The response type `Stack` is already defined. The input will be a stack ID (number).
+3.  **Implement API Function**: Create `inspectStack(id: number): Promise<Stack>` in `src/api/portainer.ts`.
+4.  **Register Tool**: Add tool definition for `inspect_stack` in `src/main.ts`.
+5.  **Handle Tool Call**: Add a case for `Tools.InspectStack` in `src/main.ts`.
+6.  **Testing**: Test the `inspect_stack` tool.
 7.  **Compilation**: Compile the server.
-8.  **Git Commit & Push**: Commit changes.
+8.  **Git Commit & Push**: Commit and push changes.
 
-**Overall Plan for Users (User Management) - after `create_user`**:
-1.  **Analyze User-Related Endpoints in Swagger (Continued)**:
-    *   `GET /users/{id}` (Inspect user)
-    *   `PUT /users/{id}` (Update user)
-    *   `DELETE /users/{id}` (Delete user)
-    *   `PUT /users/{id}/passwd` (Update user password)
-    *   `GET /users/{id}/tokens` (Get user API keys)
-    *   `POST /users/{id}/tokens` (Create user API key)
-    *   `DELETE /users/{id}/tokens/{keyID}` (Delete user API key)
-    *   `GET /users/admin/check` (Check admin existence)
-    *   `POST /users/admin/init` (Initialize admin)
-    *   `GET /users/me` (Get current user)
-2.  **Implement Tools Sequentially**: For each endpoint or logical group of endpoints:
-    *   Define tool constant(s) in `src/constants/index.ts`.
-    *   Add TypeScript type definitions for payloads and responses in `src/types/index.ts` (e.g., `UserCreatePayload`, `UserResponse`, `UserUpdatePayload`, `UserPasswordUpdatePayload`, `UserAPIKeyCreatePayload`, `APIKeyResponse`).
-    *   Implement the API interaction function(s) in `src/api/portainer.ts`.
-    *   Register the new tool(s) with description and input/output schemas in `src/main.ts`.
-    *   Add `case`(s) to the `CallToolRequestSchema` handler in `src/main.ts`.
-    *   Test thoroughly using `portainer-ce-develop`.
-    *   Commit changes.
-3.  **Compilation (Optional, as per user request)**: After a significant set of User Management tools are implemented and tested, consider compiling the server using `deno compile --allow-read --allow-env --allow-net src/main.ts --output src.exe` (or similar, based on user's refined command).
+**Overall Plan for Stacks (Stack Management) - after `inspect_stack`**:
+*   Continue implementing tools for creating, updating, and deleting stacks.
 
-**Broader Implementation Plan (Post-Users):**
-1.  **Stacks (Stack Management)**
-2.  **Backup/Restore**
-3.  **LDAP Configuration**
-4.  **Review and Enhance Container Management Tools**
+**Broader Implementation Plan (Post-Stacks, if User Management remains paused):**
+1.  **Backup/Restore**
+2.  **LDAP Configuration**
+3.  **Review and Enhance Container Management Tools**
 
 ## Known Issues & Blockers (Historically)
 

@@ -74,6 +74,18 @@ The server provides the following tools for AI assistants:
 - `FETCH_SERVICES`: List all services
 - `FETCH_SERVICE_LOG`: Get service logs
 
+### Authentication
+- `authenticate_user`: Authenticate a user and retrieve a JWT token.
+  - Input: `{ "username": "string", "password": "string" }`
+
+### User Management
+- `list_users`: Fetch all users.
+  - Input: `{}`
+
+### Stack Management
+- `list_stacks`: Fetch all stacks.
+  - Input: `{}`
+
 ## Development
 
 
@@ -111,4 +123,4 @@ MIT
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request 
+5. Open a Pull Request
