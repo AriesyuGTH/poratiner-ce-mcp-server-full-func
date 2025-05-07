@@ -15,4 +15,5 @@ export const Tools = {
     InspectService: "inspect_service",
     UpdateService: "update_docker_service",
     AuthenticateUser: "authenticate_user",
+    ListUsers: "list_users",
 };

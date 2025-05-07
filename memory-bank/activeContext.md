@@ -14,28 +14,48 @@ The `authenticateUser` tool (for `POST /auth`) has been successfully implemented
 
 ## Recent Changes
 
--   Successfully implemented and tested the `authenticateUser` MCP tool.
+-   Successfully implemented, tested, and compiled the `authenticateUser` MCP tool.
     -   Added `Tools.AuthenticateUser` constant.
     -   Defined `AuthenticatePayload` and `AuthenticateResponse` types.
     -   Implemented `authenticateUser` function in `src/api/portainer.ts`.
     -   Registered and handled the tool in `src/main.ts`.
--   Added `portainer-ce-develop` server configuration to `cline_mcp_settings.json` to allow testing of the local Deno server.
--   Troubleshot and resolved Deno server startup and connection issues by running `npm install` and ensuring correct `.env` configuration and server restart.
--   Analyzed `swagger-api-docs/api-swagger-essential.yaml` against existing tools.
--   Identified a detailed list of unimplemented API functionalities.
--   User confirmed the priority areas for implementation.
+-   Added `portainer-ce-develop` server configuration to `cline_mcp_settings.json` for testing.
+-   Resolved Deno server startup and connection issues.
+-   Successfully compiled the project to `src.exe` using `deno compile`.
+-   Committed changes related to `authenticateUser` tool with message "feat: add authenticateUser tool".
+-   Analyzed `swagger-api-docs/api-swagger-essential.yaml`.
+-   Identified unimplemented API functionalities.
+-   User confirmed priority areas.
+
+## Recent Changes (Continued)
+-   Successfully implemented and tested the `list_users` MCP tool.
+    -   Added `Tools.ListUsers` constant.
+    -   Defined `User` and related types.
+    -   Implemented `listUsers` function in `src/api/portainer.ts`.
+    -   Registered and handled the tool in `src/main.ts`.
+    -   Recompiled the project to include the new tool in `src.exe`.
+    -   Tested `list_users` successfully using the compiled `portainer-ce-develop` server.
 
 ## Next Steps - Task Execution
 
-The next priority is **Users (User Management)**. This will involve:
-1.  Analyzing Swagger definitions for user-related endpoints (list, create, inspect, update, delete users; manage API keys; manage passwords).
-2.  Defining new tool constants in `src/constants/index.ts`.
-3.  Adding necessary type definitions in `src/types/index.ts`.
-4.  Implementing API functions in `src/api/portainer.ts`.
-5.  Registering and handling tools in `src/main.ts`.
-6.  Testing each new user management tool.
-7.  Committing changes.
-8.  Optionally, compiling the server after a set of user management tools are completed.
+Continuing with **Users (User Management)**. The next tool to implement will be **Create User** (corresponds to `POST /api/users`).
+
+The implementation steps for `create_user` will be:
+1.  **Update Memory Bank**: Reflect current focus.
+2.  **Define Tool Constant**: Add `CreateUser` to `Tools`.
+3.  **Add Type Definitions**: Define `UserCreatePayload` (based on `users.userCreatePayload` from Swagger) and ensure `User` (response type) is sufficient.
+4.  **Implement API Function**: Create `createUser(payload: UserCreatePayload)` in `src/api/portainer.ts`.
+5.  **Register Tool**: Add tool definition for `create_user` in `src/main.ts`.
+6.  **Handle Tool Call**: Add a case for `Tools.CreateUser` in `src/main.ts`.
+7.  **Testing**: Test the `create_user` tool.
+8.  **Compilation**: Compile the server.
+9.  **Git Commit & Push**: Commit changes.
+
+Following `create_user`, other User Management tools will be implemented:
+- Inspect user (`GET /users/{id}`)
+- Update user (`PUT /users/{id}`)
+- Delete user (`DELETE /users/{id}`)
+- Manage user passwords and API keys.
 
 ## Active Decisions and Considerations
 

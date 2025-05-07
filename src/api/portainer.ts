@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { User } from "../types/index.ts"; // Import User type
 
 import { load } from "https://deno.land/std@0.220.1/dotenv/mod.ts";
 
@@ -303,6 +304,7 @@ export {
   restartDockerService,
   inspectService,
   authenticateUser, // Add new function to the existing export block
+  listUsers, // Add new function to exports
 };
 
 /**
@@ -314,8 +316,17 @@ async function authenticateUser(
   payload: { username?: string; password?: string },
 ): Promise<{ jwt?: string }> {
   const response = await portainerClient.post(
-    `/api/auth`, 
+    `/api/auth`,
     payload,
   );
   return response.data;
+}
+
+/**
+ * Fetch all users from Portainer API.
+ * @returns Array of User objects.
+ */
+async function listUsers(): Promise<User[]> {
+  const response = await portainerClient.get(`/api/users`);
+  return response.data as User[];
 }

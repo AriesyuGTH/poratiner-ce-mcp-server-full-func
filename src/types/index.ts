@@ -121,3 +121,45 @@ export interface AuthenticatePayload {
 export interface AuthenticateResponse {
     jwt?: string;
 }
+
+/**
+ * Represents user authorizations, mapping permission names to boolean values.
+ * Based on `portainer.Authorizations` from Swagger.
+ */
+export interface Authorizations {
+    [key: string]: boolean;
+}
+
+/**
+ * Represents endpoint-specific authorizations.
+ * Maps endpoint identifiers (as strings) to Authorizations objects.
+ * Based on `portainer.EndpointAuthorizations` from Swagger.
+ */
+export interface EndpointAuthorizations {
+    [key: string]: Authorizations;
+}
+
+/**
+ * Represents user theme settings.
+ * Based on `portainer.UserThemeSettings` from Swagger.
+ */
+export interface UserThemeSettings {
+    color?: "dark" | "light" | "highcontrast" | "auto";
+}
+
+/**
+ * Represents a Portainer user.
+ * Based on `portainer.User` from Swagger.
+ */
+export interface User {
+    Id?: number;
+    Username?: string;
+    Role?: number; // 1 for administrator, 2 for regular user
+    UserTheme?: string; // Deprecated
+    ThemeSettings?: UserThemeSettings;
+    TokenIssueAt?: number;
+    UseCache?: boolean;
+    // Deprecated fields, but included for completeness if API still returns them
+    endpointAuthorizations?: EndpointAuthorizations; // Deprecated
+    portainerAuthorizations?: Authorizations; // Deprecated
+}

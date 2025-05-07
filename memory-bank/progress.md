@@ -27,19 +27,42 @@
 
 -   **`authenticateUser` Tool (Auth `POST /auth`)**:
     -   Successfully implemented (constants, types, API function, main.ts registration and handling).
-    -   Successfully tested using `portainer-ce-develop` server configuration and user-provided credentials. Returned a valid JWT.
--   **Development Environment for Local Deno Server**:
-    -   Added `portainer-ce-develop` entry to `cline_mcp_settings.json` to enable `use_mcp_tool` for the local Deno server.
-    -   Resolved initial Deno server startup issues by running `npm install`.
-    -   Ensured correct `.env` (specifically `PORTAINER_BASE_URL`) is used by restarting the Deno server.
+    -   Successfully tested using `portainer-ce-develop` server configuration (pointing to local Deno script initially, then to compiled `src.exe`) and user-provided credentials. Returned a valid JWT.
+-   **Development Environment & Workflow**:
+    -   Added `portainer-ce-develop` entry to `cline_mcp_settings.json`.
+    -   Resolved Deno server startup/dependency issues with `npm install`.
+    -   Established workflow for testing local Deno server and compiled executable.
+    -   Successfully compiled the project to `src.exe` using `deno compile --allow-read --allow-env --allow-net --env-file=.env src/main.ts`.
+    -   Committed changes for `authenticateUser` tool to Git (`feat: add authenticateUser tool`).
+    -   Pushed commit `f17ff90` to remote repository.
+-   **MCP Server Configuration for Compilation**:
+    -   Updated `cline_mcp_settings.json` to temporarily rename the command path for `portainer-ce-develop` during compilation to avoid file lock errors, then restored it to point to the new `src.exe`.
+
+## Current Status & What Works (Continued)
+
+-   **`list_users` Tool (Users `GET /api/users`)**:
+    -   Successfully implemented (constants, types, API function, main.ts registration and handling).
+    -   Type signature for `listUsers` in `src/api/portainer.ts` refined to use imported `User[]`.
+    -   Successfully recompiled the project to include the `list_users` tool in `src.exe`.
+    -   Successfully tested using `portainer-ce-develop` server configuration (pointing to the new `src.exe`). Returned a list of users.
 
 ## What's Left to Build / Next Steps
 
-The next priority area is **Users (User Management)**. The general plan for implementing tools in this area is:
+Continuing with the **Users (User Management)** area.
+The next tool to implement is `create_user` (corresponds to `POST /api/users`).
 
-1.  **Analyze User-Related Endpoints in Swagger**:
-    *   `GET /users` (List users)
-    *   `POST /users` (Create user)
+**Implementation Plan for `create_user`:**
+1.  **Define Tool Constant**: Add `CreateUser` to `Tools` in `src/constants/index.ts`.
+2.  **Add Type Definitions**: Define `UserCreatePayload` (based on `users.userCreatePayload` from Swagger) in `src/types/index.ts`. The response type is `portainer.User`, which we already have as `User`.
+3.  **Implement API Function**: Create `createUser(payload: UserCreatePayload): Promise<User>` in `src/api/portainer.ts`.
+4.  **Register Tool**: Add tool definition for `create_user` in `src/main.ts`.
+5.  **Handle Tool Call**: Add a case for `Tools.CreateUser` in `src/main.ts`.
+6.  **Testing**: Test the `create_user` tool.
+7.  **Compilation**: Compile the server.
+8.  **Git Commit & Push**: Commit changes.
+
+**Overall Plan for Users (User Management) - after `create_user`**:
+1.  **Analyze User-Related Endpoints in Swagger (Continued)**:
     *   `GET /users/{id}` (Inspect user)
     *   `PUT /users/{id}` (Update user)
     *   `DELETE /users/{id}` (Delete user)

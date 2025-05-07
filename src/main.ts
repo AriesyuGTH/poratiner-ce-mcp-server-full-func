@@ -24,9 +24,10 @@ import {
   updateContainerResourceLimits,
   restartDockerService,
   inspectService,
-  authenticateUser, // Add authenticateUser here
+  authenticateUser,
+  listUsers, // Import the new listUsers function
 } from "./api/portainer.ts";
-import { AuthenticatePayload, AuthenticateResponse } from "./types/index.ts"; // Add type imports
+import { AuthenticatePayload, AuthenticateResponse, User } from "./types/index.ts"; // Add User type import
 
 const server = new Server(
   {
@@ -289,6 +290,15 @@ server.setRequestHandler(ListToolsRequestSchema, () => {
           required: ["username", "password"],
         },
       },
+      {
+        name: Tools.ListUsers,
+        description: "Fetch all users",
+        inputSchema: { // GET /api/users does not require a body/payload
+          type: "object",
+          properties: {},
+          required: [],
+        },
+      },
     ],
   };
 });
@@ -491,6 +501,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const result = await authenticateUser(
           typedArgs as AuthenticatePayload,
         );
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
+      }
+
+      case Tools.ListUsers: {
+        const result = await listUsers();
         return {
           content: [{
             type: "text",
